@@ -1,14 +1,24 @@
 # Athena Reddit Entity Detection — Portfolio Demo
 
-This is a sanitized portfolio version of the Athena Overwatch Reddit entity detection service.
+Athena is a broader RAG knowledge and automation platform for Overwatch data, search, and chatbot-style answers. This repo is a sanitized portfolio demo of one service inside that system: the Reddit entity detection service.
 
-The production version processes Reddit threads for Athena, a knowledge system for the Overwatch game. This demo repo contains the core detection pipeline, example inputs and outputs, and public-facing documentation showing how the service classifies Reddit posts by detected game entity.
+It demonstrates one service boundary inside a larger multi-source ingestion and retrieval system. This demo contains the core detection pipeline, example inputs and outputs, and public-facing documentation showing how the service classifies Reddit posts by detected game entity.
 
 ---
 
 ## What this project is
 
-An HTTP service that receives Reddit post items — title, body, top comments, and upstream LLM annotations — and returns a structured detection result indicating which Overwatch game entities (heroes, abilities, perks, maps, ranks, modes) were detected and at what confidence tier.
+An HTTP service that receives Reddit post items — title, body, top comments, and upstream LLM annotations — and returns a structured detection result indicating which Overwatch game entities (heroes, abilities, perks, maps, ranks, modes) were detected and at what confidence tier. This service is one step in a multi-source ingestion and retrieval pipeline, not the full chatbot or knowledge platform.
+
+---
+
+## Where this fits in Athena
+
+Athena brings together multiple source pipelines: official Blizzard game data, patch notes, hero statistics, Reddit/community discussion, and video/transcription sources. Those sources are processed into structured records and RAG-ready knowledge for search, retrieval, and chatbot-style answers.
+
+This repo focuses only on the Reddit entity detection service — one piece of that larger system. In the full platform, n8n handles orchestration and source-specific workflows; this service handles detection policy and returns a structured downstream contract. The other source pipelines, the knowledge layer, the chatbot interface, and the full retrieval system are not part of this demo.
+
+This is not the full Athena platform.
 
 ---
 

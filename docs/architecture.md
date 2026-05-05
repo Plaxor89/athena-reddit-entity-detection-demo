@@ -8,6 +8,10 @@ An upstream workflow (n8n) fetches Reddit posts from r/Overwatch and runs an LLM
 
 The service processes each item through the detection pipeline and returns the packaged detection result.
 
+### Scope note
+
+This service is scoped to the Reddit pipeline. Other Athena workflows handle official core game data, patch notes, hero statistics, and video/transcription sources. Those other workflows are intentionally omitted from this demo so the repo stays focused on one clean service boundary.
+
 ## Before / after
 
 ### Before

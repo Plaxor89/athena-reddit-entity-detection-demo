@@ -1,6 +1,6 @@
 # Sanitization Notes
 
-This is a sanitized portfolio version of a private production service. The sections below describe what has been omitted or replaced and what remains.
+This is a sanitized portfolio version of a private working service used inside the Athena project. The sections below describe what has been omitted or replaced and what remains.
 
 ---
 
