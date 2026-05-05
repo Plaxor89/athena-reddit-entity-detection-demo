@@ -1,0 +1,15 @@
+{
+    "name": "athena-reddit-entity-detection-demo",
+    "version": "1.0.0",
+    "main": "src/server.js",
+    "scripts": {
+      "start": "node src/server.js"
+    },
+    "engines": {
+      "node": "22"
+    },
+    "dependencies": {
+      "express": "^4.21.2",
+      "pg": "^8.13.1"
+    }
+  }

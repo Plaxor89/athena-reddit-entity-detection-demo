@@ -1,0 +1,198 @@
+[
+  {
+    "contract_version": "detector.downstream.v3",
+    "post_id": "demo_post_001",
+    "posture": "RAG_OK",
+    "storage_intent": "RAG_OK",
+    "deterministic_detection_outcome": null,
+    "deterministic_selected_count": 1,
+    "needs_lmm_review": false,
+    "should_route_review": false,
+    "should_route_deterministic": true,
+    "downstream_action": "deterministic_followup",
+    "deterministic_item_explanation": {
+      "outcome_path": "selected_promoted",
+      "counts": {
+        "candidates_norm_n": 5,
+        "det_selected_pre_n": 1,
+        "det_suppressed_pre_n": 4
+      },
+      "summary_line_posture_first": "[selected_promoted] posture=RAG_OK (implementation_class=HARD_ELIGIBLE) | top_select: select:deterministic_pass (n=1)",
+      "top_selected_reasons": [
+        { "reason": "select:deterministic_pass", "n": 1 }
+      ],
+      "top_suppressed_reasons": [
+        { "reason": "suppress:comment_exact_low_relevance", "n": 4 }
+      ]
+    },
+    "deterministic": {
+      "selected": [
+        {
+          "canonical_slug": "hanzo",
+          "display_name": "Hanzo",
+          "category": "hero",
+          "source": "title",
+          "posture": "RAG_OK"
+        }
+      ],
+      "non_promoted_summary": {
+        "count": 4,
+        "top_reason": "suppress:comment_exact_low_relevance"
+      }
+    }
+  },
+  {
+    "contract_version": "detector.downstream.v3",
+    "post_id": "demo_post_002",
+    "posture": "RAG_OK",
+    "storage_intent": "RAG_OK",
+    "deterministic_detection_outcome": null,
+    "deterministic_selected_count": 2,
+    "needs_lmm_review": false,
+    "should_route_review": false,
+    "should_route_deterministic": true,
+    "downstream_action": "deterministic_followup",
+    "deterministic_item_explanation": {
+      "outcome_path": "selected_promoted",
+      "counts": {
+        "candidates_norm_n": 4,
+        "det_selected_pre_n": 2,
+        "det_suppressed_pre_n": 2
+      },
+      "summary_line_posture_first": "[selected_promoted] posture=RAG_OK (implementation_class=HARD_ELIGIBLE) | top_select: select:deterministic_pass (n=2)",
+      "top_selected_reasons": [
+        { "reason": "select:deterministic_pass", "n": 2 }
+      ],
+      "top_suppressed_reasons": [
+        { "reason": "suppress:comment_exact_low_relevance", "n": 2 }
+      ]
+    },
+    "deterministic": {
+      "selected": [
+        {
+          "canonical_slug": "zarya",
+          "display_name": "Zarya",
+          "category": "hero",
+          "source": "op",
+          "posture": "RAG_OK"
+        },
+        {
+          "canonical_slug": "reinhardt",
+          "display_name": "Reinhardt",
+          "category": "hero",
+          "source": "op",
+          "posture": "RAG_OK"
+        }
+      ],
+      "non_promoted_summary": {
+        "count": 2,
+        "top_reason": "suppress:comment_exact_low_relevance"
+      }
+    }
+  },
+  {
+    "contract_version": "detector.downstream.v3",
+    "post_id": "demo_post_003",
+    "posture": "CONTEXT_ONLY",
+    "storage_intent": "CONTEXT_ONLY",
+    "deterministic_detection_outcome": null,
+    "deterministic_selected_count": 1,
+    "needs_lmm_review": false,
+    "should_route_review": false,
+    "should_route_deterministic": false,
+    "downstream_action": "context_only_forward",
+    "deterministic_item_explanation": {
+      "outcome_path": "selected_promoted",
+      "counts": {
+        "candidates_norm_n": 3,
+        "det_selected_pre_n": 1,
+        "det_suppressed_pre_n": 2
+      },
+      "summary_line_posture_first": "[selected_promoted] posture=CONTEXT_ONLY (implementation_class=HIGH_ELIGIBLE) | top_select: select:deterministic_pass (n=1)",
+      "top_selected_reasons": [
+        { "reason": "select:deterministic_pass", "n": 1 }
+      ],
+      "top_suppressed_reasons": [
+        { "reason": "suppress:comment_exact_low_relevance", "n": 2 }
+      ]
+    },
+    "deterministic": {
+      "selected": [
+        {
+          "canonical_slug": "widowmaker",
+          "display_name": "Widowmaker",
+          "category": "hero",
+          "source": "title",
+          "posture": "CONTEXT_ONLY"
+        }
+      ],
+      "non_promoted_summary": {
+        "count": 2,
+        "top_reason": "suppress:comment_exact_low_relevance"
+      }
+    }
+  },
+  {
+    "contract_version": "detector.downstream.v3",
+    "post_id": "demo_post_004",
+    "posture": "RAW_ONLY",
+    "storage_intent": "RAW_ONLY",
+    "deterministic_detection_outcome": null,
+    "deterministic_selected_count": 0,
+    "needs_lmm_review": false,
+    "should_route_review": false,
+    "should_route_deterministic": false,
+    "downstream_action": "no_further_action",
+    "deterministic_item_explanation": {
+      "outcome_path": "suppressed_only",
+      "counts": {
+        "candidates_norm_n": 5,
+        "det_selected_pre_n": 0,
+        "det_suppressed_pre_n": 5
+      },
+      "summary_line_posture_first": "[suppressed_only] posture=RAW_ONLY (implementation_class=SHADOW) | top_suppress: suppress:concept_neg_anchor_hit:role:comp (n=3)",
+      "top_selected_reasons": [],
+      "top_suppressed_reasons": [
+        { "reason": "suppress:concept_neg_anchor_hit:role:comp", "n": 3 },
+        { "reason": "suppress:score_below_min", "n": 2 }
+      ]
+    },
+    "deterministic": {
+      "selected": [],
+      "non_promoted_summary": {
+        "count": 5,
+        "top_reason": "suppress:concept_neg_anchor_hit:role:comp"
+      }
+    }
+  },
+  {
+    "contract_version": "detector.downstream.v3",
+    "post_id": "demo_post_005",
+    "posture": null,
+    "storage_intent": null,
+    "deterministic_detection_outcome": "NO_DETECTION",
+    "deterministic_selected_count": 0,
+    "needs_lmm_review": false,
+    "should_route_review": false,
+    "should_route_deterministic": false,
+    "downstream_action": "no_further_action",
+    "deterministic_item_explanation": {
+      "outcome_path": "zero_candidates",
+      "counts": {
+        "total_candidates": 0,
+        "selected": 0,
+        "suppressed": 0
+      },
+      "summary_line_posture_first": "No deterministic candidates were detected for this item.",
+      "top_selected_reasons": [],
+      "top_suppressed_reasons": []
+    },
+    "deterministic": {
+      "selected": [],
+      "non_promoted_summary": {
+        "count": 0,
+        "top_reason": null
+      }
+    }
+  }
+]

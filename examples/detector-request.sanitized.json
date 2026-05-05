@@ -1,0 +1,87 @@
+[
+  {
+    "post_id": "demo_post_001",
+    "subreddit": "Overwatch",
+    "title": "Found a Hanzo drawing posted at a local café",
+    "body": "Someone put up a fan drawing of Hanzo on the community corkboard. The crayon work is surprisingly good.",
+    "author": "demo_user_1",
+    "score": 2895,
+    "created_utc": "2026-05-04T16:10:00.000Z",
+    "thread_type": "CLIP_OR_MEME",
+    "topic_scope": "HERO_SPECIFIC",
+    "top_comments": [
+      { "rank": 1, "author": "demo_user_2",  "score": 308, "body": "The side profile is perfect. Very on-brand for Hanzo." },
+      { "rank": 2, "author": "demo_user_3",  "score": 107, "body": "The OW economy probably means Hanzo never eats anywhere this casual." },
+      { "rank": 3, "author": "demo_user_4",  "score": 80,  "body": "Now I know what we're all thinking." },
+      { "rank": 4, "author": "demo_user_5",  "score": 20,  "body": "Soldier: 76 would respect this establishment." },
+      { "rank": 5, "author": "demo_user_6",  "score": 10,  "body": "Cassidy, Reaper, and Hanzo would all be regulars here." }
+    ]
+  },
+  {
+    "post_id": "demo_post_002",
+    "subreddit": "Overwatch",
+    "title": "Why does Ball need a Zarya bubble perk when Reinhardt could use it?",
+    "body": "Ball already has over 1k HP with armor. Giving him a Zarya bubble feels like overkill. If any tank deserved a bubble perk it would be Reinhardt, not this guy.",
+    "author": "demo_user_7",
+    "score": 2394,
+    "created_utc": "2026-05-04T14:10:00.000Z",
+    "thread_type": "DISCUSSION",
+    "topic_scope": "HERO_SPECIFIC",
+    "top_comments": [
+      { "rank": 1, "author": "demo_user_8",  "score": 210, "body": "Hard agree. Zarya's bubble on Reinhardt would be so much more thematic." },
+      { "rank": 2, "author": "demo_user_9",  "score": 95,  "body": "Ball players are already unkillable unless they hard feed." },
+      { "rank": 3, "author": "demo_user_10", "score": 60,  "body": "Reinhardt mains are crying that this perk went to a hamster." },
+      { "rank": 4, "author": "demo_user_11", "score": 22,  "body": "Just nerf Ball and move on." },
+      { "rank": 5, "author": "demo_user_12", "score": 8,   "body": "I play Zarya and even I think Ball shouldn't get this." }
+    ]
+  },
+  {
+    "post_id": "demo_post_003",
+    "subreddit": "Overwatch",
+    "title": "Widowmaker graphic poster I made",
+    "body": "Spent a few days on this design. Tried to capture Widowmaker's cold, precise aesthetic. Feedback welcome.",
+    "author": "demo_user_13",
+    "score": 1850,
+    "created_utc": "2026-05-04T18:30:00.000Z",
+    "thread_type": "CLIP_OR_MEME",
+    "topic_scope": "HERO_SPECIFIC",
+    "top_comments": [
+      { "rank": 1, "author": "demo_user_14", "score": 190, "body": "The blue palette is perfect — very Widowmaker." },
+      { "rank": 2, "author": "demo_user_15", "score": 88,  "body": "Sniper scope framing is inspired." },
+      { "rank": 3, "author": "demo_user_16", "score": 45,  "body": "Would love to see a Pharah version next." },
+      { "rank": 4, "author": "demo_user_17", "score": 12,  "body": "Incredible work." }
+    ]
+  },
+  {
+    "post_id": "demo_post_004",
+    "subreddit": "Overwatch",
+    "title": "Jjonak's OWWC squad prediction post-tryouts",
+    "body": "Tank: Player A / Player B  DPS: Player C / Player D / Player E  Support: Player F will choose the second support slot. Tryouts ran about 3 hours across 10 maps.",
+    "author": "demo_user_18",
+    "score": 420,
+    "created_utc": "2026-05-04T15:00:00.000Z",
+    "thread_type": "OTHER",
+    "topic_scope": "TOURNAMENT",
+    "top_comments": [
+      { "rank": 1, "author": "demo_user_19", "score": 50, "body": "Surprised not to see a few other names. Thought tryouts would run longer." },
+      { "rank": 2, "author": "demo_user_20", "score": 28, "body": "Good mix of tank and support options here." },
+      { "rank": 3, "author": "demo_user_21", "score": 14, "body": "The support slot competition was fierce apparently." }
+    ]
+  },
+  {
+    "post_id": "demo_post_005",
+    "subreddit": "Overwatch",
+    "title": "Asia Playoffs drops schedule — first matches start in ~8 hours",
+    "body": "Full Twitch drop schedule is in the comments. Watch eligible streams to earn drops.",
+    "author": "demo_user_22",
+    "score": 310,
+    "created_utc": "2026-05-04T12:00:00.000Z",
+    "thread_type": "OTHER",
+    "topic_scope": "TOURNAMENT",
+    "top_comments": [
+      { "rank": 1, "author": "demo_user_23", "score": 74, "body": "Thanks for the heads-up, setting a reminder now." },
+      { "rank": 2, "author": "demo_user_24", "score": 40, "body": "Stage 1 Group A starts at 10:00 UTC." },
+      { "rank": 3, "author": "demo_user_25", "score": 18, "body": "Hope the drops system works better than last event." }
+    ]
+  }
+]

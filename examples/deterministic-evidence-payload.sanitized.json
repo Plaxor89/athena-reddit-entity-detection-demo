@@ -1,0 +1,69 @@
+[
+  {
+    "post_id": "demo_post_001",
+    "storage_intent": "RAG_OK",
+    "has_forwardable_entities": true,
+    "forwarding_reason": "forwarded",
+    "rag_ok_entities": [
+      {
+        "stable_key": "hero||hanzo||HERO",
+        "canonical_slug": "hanzo",
+        "display_name": "Hanzo",
+        "category": "hero"
+      }
+    ],
+    "context_only_entities": []
+  },
+  {
+    "post_id": "demo_post_002",
+    "storage_intent": "RAG_OK",
+    "has_forwardable_entities": true,
+    "forwarding_reason": "forwarded",
+    "rag_ok_entities": [
+      {
+        "stable_key": "hero||zarya||HERO",
+        "canonical_slug": "zarya",
+        "display_name": "Zarya",
+        "category": "hero"
+      },
+      {
+        "stable_key": "hero||reinhardt||HERO",
+        "canonical_slug": "reinhardt",
+        "display_name": "Reinhardt",
+        "category": "hero"
+      }
+    ],
+    "context_only_entities": []
+  },
+  {
+    "post_id": "demo_post_003",
+    "storage_intent": "CONTEXT_ONLY",
+    "has_forwardable_entities": true,
+    "forwarding_reason": "forwarded",
+    "rag_ok_entities": [],
+    "context_only_entities": [
+      {
+        "stable_key": "hero||widowmaker||HERO",
+        "canonical_slug": "widowmaker",
+        "display_name": "Widowmaker",
+        "category": "hero"
+      }
+    ]
+  },
+  {
+    "post_id": "demo_post_004",
+    "storage_intent": "RAW_ONLY",
+    "has_forwardable_entities": false,
+    "forwarding_reason": "raw_only_not_forwarded",
+    "rag_ok_entities": [],
+    "context_only_entities": []
+  },
+  {
+    "post_id": "demo_post_005",
+    "storage_intent": null,
+    "has_forwardable_entities": false,
+    "forwarding_reason": "no_detection",
+    "rag_ok_entities": [],
+    "context_only_entities": []
+  }
+]
