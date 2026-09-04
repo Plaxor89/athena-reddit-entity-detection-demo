@@ -1,49 +1,140 @@
 # Athena Reddit Entity Detection — Portfolio Demo
 
-Athena is a broader RAG knowledge and automation platform for Overwatch data, search, and chatbot-style answers. This repo is a sanitized portfolio demo of one service inside that system: the Reddit entity detection service.
+Athena is a live site about Overwatch. It reads several kinds of information — official game
+data, hero statistics, patch notes, community discussion, and creator video metadata — and
+turns a small part of that into reasons to look closer.
 
-It demonstrates one service boundary inside a larger multi-source ingestion and retrieval system. This demo contains the core detection pipeline, example inputs and outputs, and public-facing documentation showing how the service classifies Reddit posts by detected game entity.
-
----
-
-## What this project is
-
-An HTTP service that receives Reddit post items — title, body, top comments, and upstream LLM annotations — and returns a structured detection result indicating which Overwatch game entities (heroes, abilities, perks, maps, ranks, modes) were detected and at what confidence tier. This service is one step in a multi-source ingestion and retrieval pipeline, not the full chatbot or knowledge platform.
+This repository is not that site. It is a sanitized portfolio copy of one service behind it:
+the part that works out which parts of the game a Reddit discussion is actually about.
 
 ---
 
-## Where this fits in Athena
+## What this service does
 
-Athena brings together multiple source pipelines: official Blizzard game data, patch notes, hero statistics, Reddit/community discussion, and video/transcription sources. Those sources are processed into structured records and RAG-ready knowledge for search, retrieval, and chatbot-style answers.
+It is an HTTP service. It receives Reddit posts — title, body, top comments, and what a
+language model already worked out about the thread — and returns a structured result saying
+which Overwatch entities were detected (heroes, abilities, perks, maps, ranks, modes) and how
+strongly the result should be treated downstream.
 
-This repo focuses only on the Reddit entity detection service — one piece of that larger system. In the full platform, n8n handles orchestration and source-specific workflows; this service handles detection policy and returns a structured downstream contract. The other source pipelines, the knowledge layer, the chatbot interface, and the full retrieval system are not part of this demo.
-
-This is not the full Athena platform.
-
----
-
-## Why I built it
-
-The original Reddit entity detection logic lived inside the main n8n workflow across several code/query nodes. That worked at first, but as the detection policy grew it became harder to test, evolve safely, and reason about edge cases.
-
-I moved that logic into a dedicated Node.js service with explicit pipeline stages. The main n8n workflow can stay focused on orchestration, Reddit collection, upstream LLM annotation, telemetry, storage, and downstream branching, while this service owns entity detection and returns a stable contract.
-
-The result is a cleaner service boundary: n8n orchestrates, the detector decides posture and routing, and downstream nodes consume a structured response instead of reinterpreting raw detection internals.
+That result is not a list of every hero name that appeared. It is a judgement about what the
+discussion is *about*.
 
 ---
 
-## What it demonstrates
+## Why entity detection is difficult
 
-- **Staged detection pipeline** — each stage has one job: normalize input, pack candidates, expand fuzzy matches, resolve identities, score and suppress, decide review, package output
-- **Ownership boundaries** — `scoreSuppressLane` owns posture, `buildReviewDecision` owns review routing, `buildDownstreamContract` is packaging only, never a second decision engine
-- **Posture-first contract** — output is structured around `posture` (`RAG_OK`, `CONTEXT_ONLY`, `RAW_ONLY`, `NO_DETECTION`), not raw entity arrays
-- **DB-backed policy loading** — entity dictionaries, aliases, and metadata loaded from a PostgreSQL database with a 10-minute in-memory cache and stale-fallback on rebuild failure
-- **Fuzzy matching and suppression** — fuzzy candidates are expanded conservatively and suppressed with explicit named reason codes
-- **Thin HTTP adapter** — no business logic in the HTTP handler; just parse, route, and return the packaged contract
+People don't use the exact hero name. They use nicknames, abbreviations and ability names,
+and some hero names are ordinary English words. A hero can also be mentioned once in a side
+comment without being what the thread is really about.
+
+A language model already reads these threads and interprets the conversation — what kind of
+thread it is, whether the comments contain a useful answer, broadly what is being discussed.
+This service does a different job: it decides which actual parts of the game the discussion
+centers on, and it has to tell a passing mention apart from a subject.
 
 ---
 
-## Architecture overview
+## How it evolved
+
+The detection logic started as a few hundred lines of JavaScript inside a single n8n workflow
+step. As more cases had to be handled, it grew to several thousand lines — all still inside
+that one step.
+
+I tried the cheaper fix first: splitting the logic across around twenty n8n workflow steps.
+That made the workflow easier to scan, but it did not solve the actual problem. The hardest
+decisions — why one candidate was promoted and another suppressed — were still difficult to
+trace when a result looked wrong.
+
+So the detector moved into a dedicated Node.js service. The service separates the work into
+stages, each stage has one job, and one stage owns the final decision.
+
+---
+
+## How the change was checked
+
+Before the workflow was allowed to depend on the service, outputs from the existing
+in-workflow version were saved as test cases and the same inputs were run through the new
+one. The results had to match, stage by stage — not only at the final output — before
+anything was switched over.
+
+Because the service is split into stages, a wrong result afterwards is easier to trace back
+to the stage that made the decision. That was the point of moving it: not that the logic got
+simpler, but that a wrong answer became findable.
+
+Those historical comparisons ran against private workflow data and are not what the
+sanitized examples in this repository contain.
+
+---
+
+## What n8n does, and what this service does
+
+n8n was not replaced. It still runs the surrounding workflow.
+
+| | Responsibility |
+|---|---|
+| **n8n** | Collects and filters Reddit posts, runs the language-model step, stores results, handles telemetry and downstream branching |
+| **Language model** | Interprets the conversation — what kind of thread it is, whether the comments answer anything |
+| **This service** | Decides which Overwatch entities the discussion centers on, and returns the detector contract |
+
+The workflow decides when to call the service and what to do with the result; the service
+decides what was detected and how strongly it should be forwarded.
+
+---
+
+## Start here: the examples
+
+The [`/examples`](examples/) folder is the fastest way to see what this service does. It
+needs no database and no setup.
+
+| File | What it shows |
+|---|---|
+| [`examples/detector-request.sanitized.json`](examples/detector-request.sanitized.json) | Input shape — 5 posts, invented demo data |
+| [`examples/detector-response.trimmed.sanitized.json`](examples/detector-response.trimmed.sanitized.json) | A trimmed selection of real response fields |
+
+The five demo posts cover the four normal detection outcomes:
+
+| Post | Outcome | Why |
+|---|---|---|
+| 1 | `RAG_OK` | Hero named in the title |
+| 2 | `RAG_OK` | Two heroes, both in the post body |
+| 3 | `CONTEXT_ONLY` | Genuinely about a hero, but as fan art — true, weaker evidence |
+| 4 | `RAW_ONLY` | Candidates found, all suppressed |
+| 5 | `NO_DETECTION` | Nothing entered scoring at all |
+
+These files are trimmed illustrations, not replayable fixtures — the working service consumes
+more upstream annotation than the sanitized request carries, and returns more than the
+trimmed response shows. See [`examples/README.md`](examples/README.md) for exactly what is
+included and what is left out.
+
+---
+
+## The detector contract
+
+The response is built around one field: `posture` — how strongly this post's detected
+entities should be treated downstream. There are four normal outcomes, and the last two are
+deliberately different from each other:
+
+- **`RAG_OK`** — strongest. A clear, unambiguous entity in the title or body, with enough
+  supporting evidence.
+- **`CONTEXT_ONLY`** — true but weaker. The entity really is there, but the evidence is less
+  central or less defensible.
+- **`RAW_ONLY`** — candidates were found and scored, but none were promoted.
+- **`NO_DETECTION`** — no candidates entered scoring at all. Not the same as `RAW_ONLY`:
+  nothing was there to score, rather than something that failed to qualify.
+
+Review routing is a separate axis from posture. An item can have a strong posture and still
+be flagged for further review, or a weak one and not be.
+
+A single result is returned as a per-post object; multiple results are returned in a batch
+envelope. Separately from the four normal outcomes, the score stage can report a named
+invariant violation rather than emit a posture it does not trust.
+
+Field meanings, packaging and the violation shape:
+[`docs/public-contract.md`](docs/public-contract.md) — the public contract reference.
+
+---
+
+## How the pipeline is put together
 
 ```
 HTTP POST  (one item or a batch)
@@ -54,57 +145,88 @@ HTTP POST  (one item or a batch)
               ├─ packCandidates                exact dictionary matching
               ├─ expandFuzzyCandidates         conservative fuzzy expansion
               ├─ normalizeAndResolveCandidates resolve canonical identity
-              ├─ scoreSuppressLane             ← deterministic posture authority
-              ├─ buildReviewDecision           ← review routing authority
+              ├─ scoreSuppressLane             ← decides posture
+              ├─ buildReviewDecision           ← decides review routing
               └─ buildDownstreamContract       packaging only
 ```
 
-The key design rule: deterministic posture is decided once, in `scoreSuppressLane`. Nothing downstream re-derives or reinterprets it.
+The rule that holds the whole thing together: **posture is decided once, in
+`scoreSuppressLane`, and nothing downstream re-derives or reinterprets it.**
+`buildDownstreamContract` packages the result and is not allowed to become a second decision
+engine.
 
 ---
 
-## Example files
+## What the implementation demonstrates
 
-The `/examples` folder contains sanitized, simplified examples derived from real workflow runs.
-
-| File | What it shows |
-|---|---|
-| [`examples/detector-request.sanitized.json`](examples/detector-request.sanitized.json) | Input batch (5 posts, invented demo data) |
-| [`examples/detector-response.trimmed.sanitized.json`](examples/detector-response.trimmed.sanitized.json) | Trimmed public-contract responses |
-| [`examples/deterministic-evidence-payload.sanitized.json`](examples/deterministic-evidence-payload.sanitized.json) | Downstream entity forwarding payload |
-
-Outcomes demonstrated across the five posts: `RAG_OK` (×2), `CONTEXT_ONLY`, `RAW_ONLY`, and `NO_DETECTION`.
+- **Staged pipeline** — each stage has one job: normalize, pack candidates, expand fuzzy
+  matches, resolve identity, score and suppress, decide review, package output.
+- **Ownership boundaries** — `scoreSuppressLane` owns posture, `buildReviewDecision` owns
+  review routing, `buildDownstreamContract` is packaging only.
+- **Posture-first contract** — consumers branch on one top-level field, not on nested
+  candidate arrays.
+- **Named suppression reasons** — when a candidate is dropped, the response says which rule
+  dropped it. This is what makes a wrong answer traceable.
+- **Self-reported invariant breaks** — if the scoring stage reaches a state it treats as
+  impossible, it reports a named violation instead of returning a plausible-looking result.
+- **DB-backed policy loading** — entity dictionaries, aliases and metadata are loaded from
+  PostgreSQL and cached in memory for 10 minutes. If a rebuild fails, the stale cache is
+  served rather than failing the request: slightly old policy is a better answer than no
+  answer.
+- **Thin HTTP adapter** — no business logic in the handler; parse, run, return.
 
 ---
 
 ## Docs
 
 - [`docs/architecture.md`](docs/architecture.md) — stage responsibilities and ownership boundaries
-- [`docs/public-contract.md`](docs/public-contract.md) — posture vocabulary and entity forwarding
-- [`docs/sanitization.md`](docs/sanitization.md) — what is omitted from this demo repo and why
+- [`docs/public-contract.md`](docs/public-contract.md) — public contract reference: posture vocabulary, response packaging, invariant violations
+- [`docs/sanitization.md`](docs/sanitization.md) — what is omitted from this public copy, and why
 
 ---
 
-## Technical notes
+## Running it
 
-The service uses Express and node-postgres (`pg`). Database connection config is read entirely from environment variables (`DB_USER`, `DB_PASSWORD`, `DB_NAME`; `DB_INSTANCE_NAME` for deployed mode; `DB_HOST`/`DB_PORT` for local mode). No values are hardcoded.
+Node 22, Express, and node-postgres (`pg`). No build step.
 
-This demo includes the service and pipeline structure, but DB-backed policy loading expects an Athena-style PostgreSQL schema. The `/examples` folder is the easiest way to review the public request/response contract without a private database.
+```
+npm install
+npm start          # listens on $PORT, default 8080
+```
+
+Database connection config is read entirely from environment variables — `DB_USER`,
+`DB_PASSWORD`, `DB_NAME`, plus `DB_INSTANCE_NAME` when deployed or `DB_HOST` / `DB_PORT`
+locally. Nothing is hardcoded. The service exposes both an Express entry point
+(`src/server.js`) and a function-style handler (`src/index.js`) for HTTP-triggered cloud
+runtimes.
+
+Policy loading expects an Athena-style PostgreSQL schema, so the service will not do useful
+work against an empty database. **The `/examples` folder is the intended way to review the
+public request and response concepts** — it needs neither a database nor a running service.
 
 ---
 
-## What is intentionally omitted
+## What this repository is not
 
-See [`docs/sanitization.md`](docs/sanitization.md) for the full list. Short version:
+This is a sanitized portfolio copy, not the private working service and not the Athena
+website. See [`docs/sanitization.md`](docs/sanitization.md) for the full list; in short, it
+omits:
 
-- Production database credentials, connection strings, and instance names
-- Cloud infrastructure configuration (runtime, IAM, secrets management)
-- Real Reddit post IDs, usernames, and comment content
-- Internal maintenance notes, deployment runbooks, and operational history
-- n8n workflow exports and raw API response fixtures
+- Database credentials, connection strings and instance identifiers
+- Cloud infrastructure and secrets configuration
+- Real Reddit post IDs, usernames and comment content
+- Internal operational documentation and n8n workflow exports
 
 ---
 
-## AI tooling note
+## How I worked on this
 
-I used AI-assisted tooling to help build and refine code, write documentation, and work through edge cases. My focus was on system design, detection policy logic, workflow behavior, testing and regression, and integration. The pipeline architecture, posture model, and suppression policy reflect my own design choices around how the system should behave.
+I used AI tools heavily while building this, but I didn't treat their output as the answer.
+I decided what the detector should do, tested what came back, investigated why something
+failed, and decided whether a change was good enough to keep. The old-versus-new comparison
+above is the clearest example: the service only got to replace the original once its results
+matched, stage by stage.
+
+My background is in technical support, which is roughly how I approach this work — start from
+what actually happened, trace it through the systems involved, and verify the fix rather than
+assuming it worked.
