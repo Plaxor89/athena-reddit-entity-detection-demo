@@ -56,9 +56,19 @@ The full detection pipeline, HTTP adapter, DB client, and config helpers. No har
 
 The SQL in `src/pipeline/policy/loadDbPolicySources.js` references PostgreSQL table names (`heroes`, `maps`, `hero_ability`, `hero_perks`, `hero_perk_versions`, `alias_registry`, `alias_registry_policy`). These are game-data schema names for an Overwatch knowledge system, not sensitive infrastructure identifiers.
 
+### References to private policy documents
+
+Comments in `src/` refer to two internal policy documents that this source snapshot was taken alongside and that are intentionally not published here: `LANE_AND_STORAGE_POLICY.md` and `CONTRACTS.md`.
+
+They hold internal policy history, invariant derivations and tuning rationale that are not needed to understand the public service boundary. The comments were retained so that this sanitized snapshot was not rewritten solely to remove private-document references, and so it reads as a genuine extract rather than an edited one. The behaviour those documents govern is described publicly in [`architecture.md`](architecture.md) and [`public-contract.md`](public-contract.md).
+
 ### Example files (`examples/`)
 
-Four sanitized JSON files derived from real workflow runs. Post IDs, usernames, and comment text have been replaced with invented demo values and placeholder identifiers (`demo_post_N`, `demo_user_N`). Titles and bodies are invented demo text inspired by the general subject matter of the originals. Hero and entity names (Hanzo, Zarya, Reinhardt, Widowmaker) are kept — they are the point of the demo.
+Two sanitized JSON files — a request example and a trimmed response example — plus a README explaining them. Post IDs, usernames, and comment text have been replaced with invented demo values and placeholder identifiers (`demo_post_N`, `demo_user_N`). Titles and bodies are invented demo text inspired by the general subject matter of the originals. Hero and entity names (Hanzo, Zarya, Reinhardt, Widowmaker) are kept — they are the point of the demo.
+
+These are illustrations of the public contract, not captured output of a single run: the request is trimmed below what the working service actually consumes, the response shows a subset of real fields without the outer batch envelope, and the large nested `deterministic` and `review` payloads are omitted. [`examples/README.md`](../examples/README.md) states this in full.
+
+A downstream entity-forwarding payload example was previously included and has been retired. The component that builds it sits outside this repository, and the example's vocabulary was not grounded in the detector source published here. The public demo now ends at the detector's own packaged contract.
 
 ### Documentation (`docs/`)
 

@@ -10,15 +10,17 @@ The service processes each item through the detection pipeline and returns the p
 
 ### Scope note
 
-This service is scoped to the Reddit pipeline. Other Athena workflows handle official core game data, patch notes, hero statistics, and video/transcription sources. Those other workflows are intentionally omitted from this demo so the repo stays focused on one clean service boundary.
+This service is scoped to the Reddit pipeline. Other Athena workflows handle official core game data, patch notes, hero statistics, and creator video metadata. Those other workflows are intentionally omitted from this demo so the repo stays focused on one clean service boundary.
 
 ## Before / after
 
 ### Before
 
-In the original version, the main n8n Reddit workflow handled both orchestration and entity detection logic directly. Detection-related work was spread across multiple workflow nodes, including detection input shaping, static dictionary/policy preparation, database-backed entity loading, candidate generation, scoring/suppression, and downstream entity forwarding.
+The detection logic began as a few hundred lines of JavaScript inside a single n8n code step, and grew to several thousand lines as more cases had to be handled.
 
-That made the workflow powerful, but also harder to maintain as the detection rules became more detailed.
+The first attempt at a fix kept the work inside n8n: it was split across around twenty workflow nodes, covering detection input shaping, static dictionary/policy preparation, database-backed entity loading, candidate generation, scoring/suppression, and downstream entity forwarding.
+
+That made the workflow easier to scan, but it did not solve the underlying problem. The hardest decisions — why one candidate was promoted and another suppressed — were still difficult to trace when a result looked wrong.
 
 ### After
 
@@ -44,6 +46,14 @@ This service is responsible for:
 - downstream contract packaging
 
 This keeps orchestration and detection policy separate. The workflow decides when to call the service and what to do with the result; the service decides what was detected and how strongly it should be forwarded.
+
+### Equivalence check before cutover
+
+Before the workflow was switched to the service, outputs from the in-workflow version were saved as test cases and the same inputs were run through the new service. Results had to match **stage by stage**, not only at the final output, before the workflow was allowed to depend on it.
+
+The stage separation is what makes that check meaningful in both directions: it is also what lets a wrong result afterwards be traced back to the stage that made the decision.
+
+Those comparisons ran against private workflow data. The sanitized examples in this repository are illustrations of the public contract, not those historical test cases.
 
 ## Pipeline stages
 
@@ -105,6 +115,9 @@ Downstream consumers should branch on top-level `posture` and `deterministic_det
 
 `POST /` with a JSON body: one item object or an array of items.
 
-Response: the packaged downstream contract — one object for a single-item request, an array for a batch.
+Response: the packaged downstream contract.
+
+- **One resulting item** — a single per-post object, whether the request body was one item or a one-element array.
+- **More than one resulting item** — a batch envelope: `{ contract_version, meta: { is_batch: true, item_count }, items: [ ... ] }`, with items in request order.
 
 For the contract structure, see [public-contract.md](public-contract.md).

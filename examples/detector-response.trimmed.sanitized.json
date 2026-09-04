@@ -24,21 +24,6 @@
       "top_suppressed_reasons": [
         { "reason": "suppress:comment_exact_low_relevance", "n": 4 }
       ]
-    },
-    "deterministic": {
-      "selected": [
-        {
-          "canonical_slug": "hanzo",
-          "display_name": "Hanzo",
-          "category": "hero",
-          "source": "title",
-          "posture": "RAG_OK"
-        }
-      ],
-      "non_promoted_summary": {
-        "count": 4,
-        "top_reason": "suppress:comment_exact_low_relevance"
-      }
     }
   },
   {
@@ -66,28 +51,6 @@
       "top_suppressed_reasons": [
         { "reason": "suppress:comment_exact_low_relevance", "n": 2 }
       ]
-    },
-    "deterministic": {
-      "selected": [
-        {
-          "canonical_slug": "zarya",
-          "display_name": "Zarya",
-          "category": "hero",
-          "source": "op",
-          "posture": "RAG_OK"
-        },
-        {
-          "canonical_slug": "reinhardt",
-          "display_name": "Reinhardt",
-          "category": "hero",
-          "source": "op",
-          "posture": "RAG_OK"
-        }
-      ],
-      "non_promoted_summary": {
-        "count": 2,
-        "top_reason": "suppress:comment_exact_low_relevance"
-      }
     }
   },
   {
@@ -99,8 +62,8 @@
     "deterministic_selected_count": 1,
     "needs_lmm_review": false,
     "should_route_review": false,
-    "should_route_deterministic": false,
-    "downstream_action": "context_only_forward",
+    "should_route_deterministic": true,
+    "downstream_action": "deterministic_followup",
     "deterministic_item_explanation": {
       "outcome_path": "selected_promoted",
       "counts": {
@@ -108,28 +71,13 @@
         "det_selected_pre_n": 1,
         "det_suppressed_pre_n": 2
       },
-      "summary_line_posture_first": "[selected_promoted] posture=CONTEXT_ONLY (implementation_class=HIGH_ELIGIBLE) | top_select: select:deterministic_pass (n=1)",
+      "summary_line_posture_first": "[selected_promoted] posture=CONTEXT_ONLY (implementation_class=SOFT_ELIGIBLE) | top_select: select:deterministic_pass (n=1)",
       "top_selected_reasons": [
         { "reason": "select:deterministic_pass", "n": 1 }
       ],
       "top_suppressed_reasons": [
         { "reason": "suppress:comment_exact_low_relevance", "n": 2 }
       ]
-    },
-    "deterministic": {
-      "selected": [
-        {
-          "canonical_slug": "widowmaker",
-          "display_name": "Widowmaker",
-          "category": "hero",
-          "source": "title",
-          "posture": "CONTEXT_ONLY"
-        }
-      ],
-      "non_promoted_summary": {
-        "count": 2,
-        "top_reason": "suppress:comment_exact_low_relevance"
-      }
     }
   },
   {
@@ -156,13 +104,6 @@
         { "reason": "suppress:concept_neg_anchor_hit:role:comp", "n": 3 },
         { "reason": "suppress:score_below_min", "n": 2 }
       ]
-    },
-    "deterministic": {
-      "selected": [],
-      "non_promoted_summary": {
-        "count": 5,
-        "top_reason": "suppress:concept_neg_anchor_hit:role:comp"
-      }
     }
   },
   {
@@ -186,13 +127,6 @@
       "summary_line_posture_first": "No deterministic candidates were detected for this item.",
       "top_selected_reasons": [],
       "top_suppressed_reasons": []
-    },
-    "deterministic": {
-      "selected": [],
-      "non_promoted_summary": {
-        "count": 0,
-        "top_reason": null
-      }
     }
   }
 ]
