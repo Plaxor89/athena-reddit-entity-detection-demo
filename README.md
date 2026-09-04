@@ -110,8 +110,9 @@ included and what is left out.
 
 ## The detector contract
 
-The response is built around one field: `posture` — how strongly this post's detected
-entities should be treated downstream. There are four normal outcomes, and the last two are
+The response is posture-first. `posture` describes how strongly detected entities should be
+treated downstream. The explicit `NO_DETECTION` case is represented separately by
+`deterministic_detection_outcome`. There are four normal outcomes, and the last two are
 deliberately different from each other:
 
 - **`RAG_OK`** — strongest. A clear, unambiguous entity in the title or body, with enough
@@ -163,8 +164,8 @@ engine.
   matches, resolve identity, score and suppress, decide review, package output.
 - **Ownership boundaries** — `scoreSuppressLane` owns posture, `buildReviewDecision` owns
   review routing, `buildDownstreamContract` is packaging only.
-- **Posture-first contract** — consumers branch on one top-level field, not on nested
-  candidate arrays.
+- **Posture-first contract** — consumers branch on explicit top-level outcome fields
+  (`posture` and `deterministic_detection_outcome`), not on nested candidate arrays.
 - **Named suppression reasons** — when a candidate is dropped, the response says which rule
   dropped it. This is what makes a wrong answer traceable.
 - **Self-reported invariant breaks** — if the scoring stage reaches a state it treats as
@@ -180,7 +181,7 @@ engine.
 ## Docs
 
 - [`docs/architecture.md`](docs/architecture.md) — stage responsibilities and ownership boundaries
-- [`docs/public-contract.md`](docs/public-contract.md) — public contract reference: posture vocabulary, response packaging, invariant violations
+- [`docs/public-contract.md`](docs/public-contract.md) — public contract reference: detection outcomes, response packaging, invariant violations
 - [`docs/sanitization.md`](docs/sanitization.md) — what is omitted from this public copy, and why
 
 ---

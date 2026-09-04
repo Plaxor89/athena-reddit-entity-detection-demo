@@ -75,9 +75,14 @@ should_route_deterministic = needs_lmm_review !== true && deterministic_selected
 Posture is not an input to this. A `CONTEXT_ONLY` item with promoted entities and no review
 need routes exactly like a `RAG_OK` one — there is no posture-specific routing branch.
 
-## Posture vocabulary
+## Normal detection outcomes
 
-There are four normal detection outcomes.
+There are four normal detection outcomes, and they are not all posture values.
+
+- **Candidate-present posture values** — `RAG_OK`, `CONTEXT_ONLY`, `RAW_ONLY`. These are the
+  values `posture` can take, and `deterministic_detection_outcome` is null.
+- **`NO_DETECTION`** is not a posture value. It is represented by `posture: null` together
+  with `deterministic_detection_outcome: "NO_DETECTION"`.
 
 ### `RAG_OK`
 Strongest promoted posture. The item's primary detection surface (title or OP body) contains
@@ -137,7 +142,7 @@ been able to complete.
 - Treat `RAW_ONLY` as equivalent to `NO_DETECTION`
 - Treat an invariant violation as `NO_DETECTION`, or as a normal posture
 - Use review routing fields as a substitute for posture
-- Invent new posture states beyond the four defined above
+- Invent new normal outcome states beyond the four defined above
 - Assume a bare array for multi-item responses
 
 ## Example
