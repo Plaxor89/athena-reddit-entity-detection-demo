@@ -80,7 +80,8 @@ need routes exactly like a `RAG_OK` one — there is no posture-specific routing
 There are four normal detection outcomes, and they are not all posture values.
 
 - **Candidate-present posture values** — `RAG_OK`, `CONTEXT_ONLY`, `RAW_ONLY`. These are the
-  values `posture` can take, and `deterministic_detection_outcome` is null.
+  non-null values `posture` can take in normal candidate-present outcomes, and
+  `deterministic_detection_outcome` is null.
 - **`NO_DETECTION`** is not a posture value. It is represented by `posture: null` together
   with `deterministic_detection_outcome: "NO_DETECTION"`.
 
